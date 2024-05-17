@@ -15,7 +15,7 @@ export default function StravaConnectButton({ authorizeURL }: Props) {
   return (
     <div>
       <button onClick={() => router.push(authorizeURL)}>
-        <Image src={connectWithStravaLogo} alt="Connect with Strava Logo" />
+        <Image src={connectWithStravaLogo} alt="Connect with Strava Logo" width={180} />
       </button>
     </div>
   )

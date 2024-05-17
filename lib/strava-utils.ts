@@ -54,3 +54,18 @@ export const getAthleteActivities = async (accessToken: string) => {
   const data = await res.json()
   return data
 }
+
+export const fetchActivityStream = async (activityId: string, accessToken: string) => {
+  const baseURL = `https://www.strava.com/api/v3/activities/${activityId}/streams?keys=time,distance,latlng,heartrate,cadence,temp,velocity_smooth,watts,grade_smooth,moving,altitude&key_by_type=true`
+  const res = await fetch(baseURL, {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + accessToken
+    }
+  })
+  if (!res.ok) {
+    throw new Error(`error retrieving ${baseURL}`)
+  }
+  const data = await res.json()
+  return data
+}

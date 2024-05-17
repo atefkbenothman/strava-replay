@@ -1,13 +1,16 @@
+import { useRouter } from "next/navigation"
+
 import { ActivityType } from "@/lib/types"
-import { cn } from "@/lib/utils"
 
 interface Props {
   activity: ActivityType
 }
 
 export default function ActivityCard({ activity }: Props) {
+  const router = useRouter()
+
   return (
-    <div className="flex flex-col items-start gap-2 border-2 border-secondary p-3 text-left text-sm transition-all hover:bg-accent rounded hover:cursor-pointer">
+    <div className="flex flex-col items-start gap-2 border-2 border-secondary p-3 text-left text-sm transition-all hover:bg-accent rounded hover:cursor-pointer" onClick={() => router.push(`/activities/${activity.id}`)}>
       <div className="flex w-full flex-col gap-1">
         <div className="flex items-center">
           <div className="flex items-center gap-2">

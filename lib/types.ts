@@ -63,3 +63,26 @@ export type ActivityType = {
   segment_leaderboard_opt_out: boolean
   leaderboard_opt_out: boolean
 }
+
+export type ActivityStreamType = {
+  [key: string]: {
+    original_size: number
+    resolution: string
+    series_type: string
+    data: number[]
+  }
+}
+
+export type StreamFormattedType = {
+  altitude?: number
+  distance?: number
+  grade_smooth?: number
+  cadence?: number
+  watts?: number
+  heartrate?: number
+  latlng?: [number, number]
+  moving?: boolean
+  temp?: number
+  time?: number
+  velocity_smooth?: number
+}
