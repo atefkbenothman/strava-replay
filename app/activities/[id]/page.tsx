@@ -1,20 +1,22 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useParams } from "next/navigation"
 
 import ActivityMap from "@/components/map/map"
 import Metrics from "@/components/metrics/metrics"
 
-import { ActivityStreamType } from "@/lib/types"
+import { ActivityStreamType, ActivityDetailsType } from "@/lib/types"
 
-import { fetchActivityStream } from "@/lib/strava-utils"
+import { fetchActivityStream, getActivityDetails } from "@/lib/strava-utils"
 
 export default function ActivityPage() {
   const activityId = useParams().id as string
 
   const [activityStream, setActivityStream] = useState<ActivityStreamType>()
+  const [activityDetails, setActivityDetails] = useState<ActivityDetailsType>()
   const [playing, setPlaying] = useState<boolean>(false)
+  const [traceCoordinates, setTraceCoordinates] = useState<number[][]>([])
 
   const getActivityStream = async (token: string) => {
     const stream = await fetchActivityStream(activityId, token)
@@ -22,6 +24,8 @@ export default function ActivityPage() {
   }
 
   const getActivitySummary = async (token: string) => {
+    const details = await getActivityDetails(activityId, token)
+    setActivityDetails(details)
   }
 
   useEffect(() => {
@@ -30,6 +34,10 @@ export default function ActivityPage() {
       Promise.all([getActivityStream(accessToken), getActivitySummary(accessToken)])
     }
   }, [])
+
+  const updateCoordinates = (coords: number[][]) => {
+    setTraceCoordinates(prevState => [...coords])
+  }
 
   const togglePlay = () => {
     setPlaying(!playing)
@@ -41,11 +49,11 @@ export default function ActivityPage() {
         <div className="grid grid-cols-2 w-full h-full gap-2 p-2 overflow-scroll">
           <div>
             {activityStream && (
-              <Metrics activityStream={activityStream} playing={playing} />
+              <Metrics activityStream={activityStream} playing={playing} updateCoordinates={updateCoordinates} />
             )}
           </div>
           <div>
-            <ActivityMap togglePlay={togglePlay} />
+            <ActivityMap activityDetails={activityDetails} togglePlay={togglePlay} traceCoordinates={traceCoordinates} />
           </div>
         </div>
       </div>

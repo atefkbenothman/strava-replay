@@ -8,14 +8,15 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 interface Props {
   activityStream: ActivityStreamType
   playing: boolean
+  updateCoordinates: (coords: number[][]) => void
 }
 
 let timer: NodeJS.Timeout;
 
-export default function MetricsGraphs({ activityStream, playing }: Props) {
+export default function MetricsGraphs({ activityStream, playing, updateCoordinates }: Props) {
   const [streamDataOriginal, setStreamDataOriginal] = useState<StreamFormattedType[]>([])
   const [streamData, setStreamData] = useState<StreamFormattedType[]>([])
-  const [streamSpeed, setStreamSpeed] = useState<number>(200)
+  const [streamSpeed, setStreamSpeed] = useState<number>(100)
 
   const sampleData = (activityStream: ActivityStreamType, rate: number) => {
     const sampledStream = { ...activityStream };
@@ -48,10 +49,14 @@ export default function MetricsGraphs({ activityStream, playing }: Props) {
   useEffect(() => {
     if (playing) {
       setStreamData([])
+      const newCoords: number[][] = []
       let counter = 0
       timer = setInterval(() => {
         if (counter < streamDataOriginal.length) {
           setStreamData((prevData) => [...prevData, streamDataOriginal[counter]])
+          const nextCoord = [streamDataOriginal[counter]["latlng"]?.[1], streamDataOriginal[counter]["latlng"]?.[0]] as [number, number]
+          newCoords.push(nextCoord)
+          updateCoordinates(newCoords)
           counter += 1
         } else {
           clearInterval(timer);
@@ -84,7 +89,7 @@ export default function MetricsGraphs({ activityStream, playing }: Props) {
             {streamData && streamData.length > 0 && (
               <div className="flex flex-col gap-1">
                 <p className="text-6xl">{Math.round(streamData.at(-1)?.["velocity_smooth"] as number || 0 * 2.23694)}</p>
-                <p className="text-right">mph</p>
+                <p className="text-right text-muted-foreground">mph</p>
               </div>
             )}
           </div>
@@ -112,7 +117,7 @@ export default function MetricsGraphs({ activityStream, playing }: Props) {
             {streamData.length > 0 && (
               <div className="flex flex-col gap-1">
                 <p className="text-6xl">{Math.round(streamData.at(-1)?.["heartrate"] as number || 0)}</p>
-                <p className="text-right">bpm</p>
+                <p className="text-right text-muted-foreground">bpm</p>
               </div>
             )}
           </div>
@@ -140,7 +145,7 @@ export default function MetricsGraphs({ activityStream, playing }: Props) {
             {streamData.length > 0 && (
               <div className="flex flex-col gap-1">
                 <p className="text-6xl">{Math.round(streamData.at(-1)?.["grade_smooth"] as number || 0)}</p>
-                <p className="text-right">deg</p>
+                <p className="text-right text-muted-foreground">deg</p>
               </div>
             )}
           </div>
@@ -168,7 +173,7 @@ export default function MetricsGraphs({ activityStream, playing }: Props) {
             {streamData.length > 0 && (
               <div className="flex flex-col gap-1">
                 <p className="text-6xl">{Math.round(streamData.at(-1)?.["altitude"] as number || 0 * 3.28084)}</p>
-                <p className="text-right">feet</p>
+                <p className="text-right text-muted-foreground">feet</p>
               </div>
             )}
           </div>

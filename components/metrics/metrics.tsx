@@ -9,9 +9,10 @@ import { ActivityStreamType } from "@/lib/types"
 interface Props {
   activityStream: ActivityStreamType
   playing: boolean
+  updateCoordinates: (coords: number[][]) => void
 }
 
-export default function MetricsOutline({ activityStream, playing }: Props) {
+export default function MetricsOutline({ activityStream, playing, updateCoordinates }: Props) {
   const [streamKeys, setStreamKeys] = useState<string[]>([])
 
   useEffect(() => {
@@ -21,7 +22,7 @@ export default function MetricsOutline({ activityStream, playing }: Props) {
   return (
     <div className="flex flex-col w-full h-full gap-2">
       <MetricsControls streamKeys={streamKeys} />
-      <MetricsGraphs activityStream={activityStream} playing={playing} />
+      <MetricsGraphs activityStream={activityStream} playing={playing} updateCoordinates={updateCoordinates} />
     </div>
   )
 }

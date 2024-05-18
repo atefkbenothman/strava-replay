@@ -6,7 +6,7 @@ interface Props {
 
 export default function MetricsControls({ streamKeys }: Props) {
   return (
-    <div className="flex mx-2 gap-3 overflow-x-scroll">
+    <div className="flex gap-3 overflow-x-scroll border-2 border-secondary p-1 rounded">
       <div className="flex items-center gap-1">
         <Checkbox className="rounded" id="grade" disabled={!streamKeys.includes("altitude")} />
         <label
