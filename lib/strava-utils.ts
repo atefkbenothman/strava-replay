@@ -85,3 +85,22 @@ export const fetchActivityStream = async (activityId: string, accessToken: strin
   const data = await res.json()
   return data
 }
+
+
+// --------------- Type Conversions ---------------  
+type Unit = "kilometer" | "mile" | "feet"
+
+export const metersConversion = (meters: number, unit: Unit) => {
+  switch (unit) {
+    case "kilometer":
+      return meters * 0.001
+    case "mile":
+      return meters * 0.000621371
+    case "feet":
+      return meters * 3.28084
+  }
+}
+
+export const speedConversion = (speed: number) => {
+  return speed * 2.23694
+}

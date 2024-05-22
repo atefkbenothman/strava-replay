@@ -20,7 +20,7 @@ export default function MetricsOutline({ activityStream, playing, updateCoordina
   }, [activityStream])
 
   return (
-    <div className="flex flex-col w-full h-full gap-2">
+    <div className="flex flex-col w-full h-full gap-4">
       <MetricsControls streamKeys={streamKeys} />
       <MetricsGraphs activityStream={activityStream} playing={playing} updateCoordinates={updateCoordinates} />
     </div>

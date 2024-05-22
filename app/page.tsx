@@ -11,11 +11,13 @@ const Title = () => {
   )
 }
 
+  // <div className="flex flex-col items-start gap-2 border-2 border-secondary p-3 text-left text-sm transition-all hover:bg-accent rounded hover:cursor-pointer" onClick={() => router.push(`/activities/${activity.id}`)}></div>
+
 export default function Home() {
   return (
     <div className="w-screen h-screen bg-background">
       <div className="flex w-full h-full items-center justify-center text-foreground">
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 border-2 border-secondary p-8 rounded bg-backgroundVariant">
           <Title />
           <StravaAuthorize />
         </div>

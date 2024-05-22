@@ -46,7 +46,7 @@ export default function ActivityPage() {
   return (
     <div className="w-screen h-screen bg-background">
       <div className="flex w-full h-full text-foreground">
-        <div className="grid grid-cols-2 w-full h-full gap-2 p-2 overflow-scroll">
+        <div className="grid grid-cols-2 w-full h-full gap-4 p-4 overflow-scroll">
           <div>
             {activityStream && (
               <Metrics activityStream={activityStream} playing={playing} updateCoordinates={updateCoordinates} />
