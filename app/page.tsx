@@ -11,8 +11,6 @@ const Title = () => {
   )
 }
 
-  // <div className="flex flex-col items-start gap-2 border-2 border-secondary p-3 text-left text-sm transition-all hover:bg-accent rounded hover:cursor-pointer" onClick={() => router.push(`/activities/${activity.id}`)}></div>
-
 export default function Home() {
   return (
     <div className="w-screen h-screen bg-background">

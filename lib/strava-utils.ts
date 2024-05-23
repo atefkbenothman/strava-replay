@@ -38,9 +38,9 @@ export const exchangeCodeForToken = async (code: string): Promise<string> => {
   return data.access_token
 }
 
-export const getAthleteActivities = async (accessToken: string) => {
-  const numActs = 15
-  const baseURL = `https://www.strava.com/api/v3/athlete/activities?per_page=${numActs}`
+export const getAthleteActivities = async (accessToken: string, page: number) => {
+  const perPage = 15
+  const baseURL = `https://www.strava.com/api/v3/athlete/activities?page=${page}&per_page=${perPage}`
   const res = await fetch(baseURL, {
     method: "GET",
     headers: {
@@ -103,4 +103,10 @@ export const metersConversion = (meters: number, unit: Unit) => {
 
 export const speedConversion = (speed: number) => {
   return speed * 2.23694
+}
+
+export const timeConversion = (seconds: number) => {
+  const hours = seconds / 3600
+  const mins = (seconds % 3500) / 60
+  return `${hours.toFixed(0)}:${mins.toFixed(0)}`
 }

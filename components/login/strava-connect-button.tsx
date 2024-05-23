@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 import connectWithStravaLogo from "@/public/connect-with-strava.svg"
 
@@ -10,13 +10,11 @@ interface Props {
 }
 
 export default function StravaConnectButton({ authorizeURL }: Props) {
-  const router = useRouter()
-
   return (
     <div>
-      <button onClick={() => router.push(authorizeURL)}>
+      <Link href={authorizeURL}>
         <Image src={connectWithStravaLogo} alt="Connect with Strava Logo" width={180} />
-      </button>
+      </Link>
     </div>
   )
 }

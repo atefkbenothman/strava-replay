@@ -8,7 +8,7 @@ interface Props {
 
 export default function ActivityList({ activities }: Props) {
   return (
-    <div className="flex flex-col gap-4 mx-4">
+    <div className="flex flex-col gap-4 mx-4 overflow-x-scroll">
       {activities.map((act: ActivityType) => {
         return (
           <ActivityCard key={act.id} activity={act} />

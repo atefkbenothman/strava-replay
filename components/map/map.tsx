@@ -41,9 +41,8 @@ export default function ActivityMap({ activityDetails, togglePlay, traceCoordina
       const traceSource = map.getSource("trace") as mapboxgl.GeoJSONSource
       traceSource.setData(geojson as any)
       map.panTo(traceCoordinates.at(-1) as [number, number])
-      // map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
       map.setCenter(traceCoordinates.at(-1) as [number, number])
-      map.zoomTo(13)
+      map.zoomTo(14)
     }
   }, [traceCoordinates])
 
@@ -121,7 +120,8 @@ export default function ActivityMap({ activityDetails, togglePlay, traceCoordina
       const map = new mapboxgl.Map({
         container: 'map',
         // style: "mapbox://styles/mapbox/outdoors-v12",
-        style: "mapbox://styles/mapbox/dark-v11",
+        style: "mapbox://styles/mapbox/standard",
+        // style: "mapbox://styles/mapbox/dark-v11",
         center: coords[0] as [number, number],
         zoom: 11,
       })
@@ -131,15 +131,6 @@ export default function ActivityMap({ activityDetails, togglePlay, traceCoordina
         loadOriginalRoute(coords)
         loadTraceRoute()
       })
-      // map.on('style.load', () => {
-      //   map.addSource('mapbox-dem', {
-      //       'type': 'raster-dem',
-      //       'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
-      //       'tileSize': 512,
-      //       'maxzoom': 14
-      //   });
-      //   map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
-      // })
     }
   }, [activityDetails])
 
