@@ -5,8 +5,8 @@ export type ActivityType = {
   upload_id: number
   name: string
   distance: number
-  moving_time: number
-  elapsed_time: number
+  moving_time: number | string
+  elapsed_time: number | string
   total_elevation_gain: number
   type: string
   sport_type: string

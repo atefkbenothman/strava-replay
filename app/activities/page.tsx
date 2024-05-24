@@ -38,10 +38,8 @@ export default function Activities() {
   const accessTokenRef = useRef<string>("")
 
   const getActivities = async (page: number) => {
-    if (accessTokenRef.current) {
-      const acts = await getAthleteActivities(accessTokenRef.current, page)
-      setActivities(acts)
-    }
+    const acts = await getAthleteActivities(accessTokenRef.current, page)
+    setActivities(acts)
   }
 
   // get access token from session storage
