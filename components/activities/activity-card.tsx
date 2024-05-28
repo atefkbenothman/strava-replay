@@ -6,10 +6,6 @@ import { BoltIcon, HeartIcon } from "@/components/svgs/icons"
 import { ActivityType } from "@/lib/types"
 import { metersConversion, speedConversion, timeConversion } from "@/lib/strava-utils"
 
-interface Props {
-  activity: ActivityType
-}
-
 const Stats = ({ activity }: { activity: ActivityType }) => {
   // convert and round activity units
   const distance = Math.round(metersConversion(activity.distance, "mile"))
@@ -89,11 +85,15 @@ const CardIcons = ({ activity }: { activity: ActivityType }) => {
   return (
     <div className="ml-auto text-xs text-foreground flex gap-2 items-center">
       {activity.has_heartrate && (
-        <HeartIcon size={4} />
+        <HeartIcon />
       )}
-      <BoltIcon size={4} />
+      <BoltIcon />
     </div>
   )
+}
+
+interface Props {
+  activity: ActivityType
 }
 
 export default function ActivityCard({ activity }: Props) {

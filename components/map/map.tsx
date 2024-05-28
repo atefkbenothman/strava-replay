@@ -2,86 +2,23 @@
 
 import { useState, useRef, useEffect } from "react"
 
-import { Button } from "@/components/ui/button"
-
-import { ActivityDetailsType } from "@/lib/types"
+import { useContext } from "react"
+import { ActivityProviderContext } from "@/app/activities/[id]/page"
 
 import polyline from "@mapbox/polyline"
 import mapboxgl from "mapbox-gl"
 import 'mapbox-gl/dist/mapbox-gl.css'
 
-interface Props {
-  activityDetails: ActivityDetailsType | undefined
-  togglePlay: () => void
-  traceCoordinates: number[][]
-}
-
-export default function ActivityMap({ activityDetails, togglePlay, traceCoordinates }: Props) {
+export default function ActivityMap() {
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ""
   const mapRef = useRef<mapboxgl.Map>()
 
-  const [isPlaying, setIsPlaying] = useState<boolean>(false)
-  const [coordinates, setCoordinates] = useState<number[][]>([])
+  const { activitySummary, isPlaying, routeCoordinates } = useContext(ActivityProviderContext)
 
-  useEffect(() => {
-    if (mapRef.current && traceCoordinates && traceCoordinates.length > 0) {
-      const map = mapRef.current
-      const geojson = {
-        type: "FeatureCollection",
-        features: [
-          {
-            type: "Feature",
-            geometry: {
-              type: "LineString",
-              coordinates: traceCoordinates
-            }
-          }
-        ]
-      }
-      const traceSource = map.getSource("trace") as mapboxgl.GeoJSONSource
-      traceSource.setData(geojson as any)
-      map.panTo(traceCoordinates.at(-1) as [number, number])
-      map.setCenter(traceCoordinates.at(-1) as [number, number])
-      map.zoomTo(14)
-    }
-  }, [traceCoordinates])
-
-  const loadTraceRoute = () => {
+  const loadOriginalRoute = (routeCoords: [number, number][]) => {
     if (mapRef.current) {
       const map = mapRef.current
-      const origin_coords = coordinates[0]
-      const featureData = {
-        type: "FeatureCollection",
-        features: [
-          {
-            type: "Feature",
-            geometry: {
-              type: "LineString",
-              coordinates: origin_coords
-            }
-          }
-        ]
-      }
-      map.addSource("trace", {
-        type: "geojson",
-        data: featureData as any
-      })
-      map.addLayer({
-        id: "trace",
-        type: "line",
-        source: "trace",
-        paint: {
-          "line-color": "blue",
-          "line-opacity": 1,
-          "line-width": 3
-        }
-      })
-    }
-  }
 
-  const loadOriginalRoute = (coords: number[][]) => {
-    if (mapRef.current) {
-      const map = mapRef.current
       map.addSource("route", {
         type: "geojson",
         data: {
@@ -89,14 +26,15 @@ export default function ActivityMap({ activityDetails, togglePlay, traceCoordina
           properties: {},
           geometry: {
             type: "LineString",
-            coordinates: coords
+            coordinates: routeCoords
           }
         }
       })
+
       map.addLayer({
         id: "route",
-        type: "line",
         source: "route",
+        type: "line",
         layout: {
           "line-join": "round",
           "line-cap": "round"
@@ -107,56 +45,92 @@ export default function ActivityMap({ activityDetails, togglePlay, traceCoordina
           "line-width": 3
         }
       })
+
     }
   }
 
-  // initialize map
+  const initializeTraceRoute = (routeCoords: [number, number][]) => {
+    if (mapRef.current) {
+      const map = mapRef.current
+      const origin_coords = routeCoords[0]
+
+      map.addSource("trace", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              properties: {},
+              geometry: {
+                type: "LineString",
+                coordinates: [origin_coords]
+              }
+            }
+          ]
+        }
+      })
+
+      map.addLayer({
+        id: "trace",
+        type: "line",
+        source: "trace",
+        paint: {
+          "line-color": "blue",
+          "line-opacity": 1,
+          "line-width": 3
+        }
+      })
+
+    }
+
+  }
+
   useEffect(() => {
-    if (activityDetails) {
-      // convert polyline to geojson
-      const coords = polyline.toGeoJSON(activityDetails.map.summary_polyline).coordinates
-      setCoordinates(coords)
+    if (isPlaying && routeCoordinates.length > 0 && mapRef.current) {
+      const map = mapRef.current
+      const feature = {
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            geometry: {
+              type: "LineString",
+              coordinates: routeCoordinates
+            }
+          }
+        ]
+      }
+      const traceSource = map.getSource("trace") as mapboxgl.GeoJSONSource
+      traceSource.setData(feature as any)
+      map.panTo(routeCoordinates.at(-1) as [number, number])
+      map.setCenter(routeCoordinates.at(-1) as [number, number])
+      map.zoomTo(14)
+    }
+  }, [routeCoordinates])
+
+  useEffect(() => {
+    if (activitySummary.map) {
+      const routeCoords = polyline.toGeoJSON(activitySummary.map.summary_polyline).coordinates as [number, number][]
 
       const map = new mapboxgl.Map({
-        container: 'map',
-        // style: "mapbox://styles/mapbox/outdoors-v12",
+        container: "map",
         style: "mapbox://styles/mapbox/standard",
-        // style: "mapbox://styles/mapbox/dark-v11",
-        center: coords[0] as [number, number],
-        zoom: 11,
+        center: [routeCoords[0][0], routeCoords[0][1]],
+        zoom: 11
       })
       mapRef.current = map
 
       map.on("load", async () => {
-        loadOriginalRoute(coords)
-        loadTraceRoute()
+        loadOriginalRoute(routeCoords)
+        initializeTraceRoute(routeCoords)
       })
     }
-  }, [activityDetails])
-
-  const togglePlayingState = () => {
-    setIsPlaying(!isPlaying)
-    togglePlay()
-    // clear route layer
-    if (mapRef.current) {
-      const map = mapRef.current
-      if (map.getLayer("route") && map.getSource("route")) {
-        map.removeLayer("route")
-        map.removeSource("route")
-      }
-    }
-  }
+  }, [activitySummary])
 
   return (
     <div className="w-full h-full">
-      <div className="w-full h-full flex flex-col gap-4">
-        <div id="map" className="w-full h-full rounded" />
-        {isPlaying ? (
-          <Button className="rounded" variant="secondary" onClick={togglePlayingState}>Pause</Button>
-        ): (
-          <Button className="rounded" variant="secondary" onClick={togglePlayingState}>Play</Button>
-        )}
-      </div>
+      <div id="map" className="w-full h-full rounded" />
     </div>
   )
 }

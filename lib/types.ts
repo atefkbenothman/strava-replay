@@ -138,3 +138,10 @@ export type ActivityDetailsType = {
   device_name: string
   embed_token: string
 }
+
+export type ChartDataType = {
+  id: string
+  label: string
+  units: string
+  chart_type: string
+}

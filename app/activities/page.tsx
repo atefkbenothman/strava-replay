@@ -22,7 +22,7 @@ const Title = () => {
     <div className="flex flex-col gap-2">
       <div className="flex gap-3 items-center">
         <p className="text-3xl font-medium">Activities</p>
-        <ActivitiesIcon size={7} />
+        <ActivitiesIcon />
       </div>
       <p className="text-muted-foreground">Choose an activity to replay</p>
     </div>
@@ -60,7 +60,7 @@ export default function Activities() {
 
   return (
     <div className="w-screen h-screen bg-background text-foreground">
-      <div className="flex justify-center h-full">
+      <div className="flex justify-center h-full w-full">
         <div className="flex flex-col w-1/3 text-foreground gap-10 my-10">
           <Title />
           <ScrollArea className="h-full w-full">

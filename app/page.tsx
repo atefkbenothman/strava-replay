@@ -5,7 +5,7 @@ const Title = ({ title }: {title: string}) => {
   return (
     <div className="flex gap-3 items-center text-foreground">
       <p className="text-4xl">{title}</p>
-      <ReplayIcon size={9} />
+      <ReplayIcon />
     </div>
   )
 }
