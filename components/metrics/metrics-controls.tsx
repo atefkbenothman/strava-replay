@@ -6,13 +6,15 @@ import MetricsControlsCheckbox from "@/components/metrics/metrics-controls-check
 export default function MetricsControls() {
   const { activityStream, categories } = useContext(ActivityProviderContext)
   const keys = Object.keys(activityStream)
-  return (
-    <div className="flex gap-3 overflow-x-scroll border-2 border-secondary p-2 rounded text-muted-foreground bg-backgroundVariant">
-      {categories.map((category) => {
-        return (
-          <MetricsControlsCheckbox key={category.id} keys={keys} identifier={category.id} label={category.label}  />
-        )
-      })}
-    </div>
-  )
+  if (keys.length > 0) {
+    return (
+      <div className="flex gap-3 overflow-x-scroll border-2 border-secondary p-2 rounded text-muted-foreground bg-backgroundVariant">
+        {categories.map((category) => {
+          return (
+            <MetricsControlsCheckbox key={category.id} keys={keys} identifier={category.id} label={category.label} checked={keys.includes(category.id)} />
+          )
+        })}
+      </div>
+    )
+  }
 }

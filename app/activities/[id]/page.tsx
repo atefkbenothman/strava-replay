@@ -22,6 +22,8 @@ export type ActivityProviderContent = {
   categories: ChartDataType[]
   isPlaying: boolean
   routeCoordinates: [number, number][]
+  selectedCategories: string[]
+  setSelectedCategories: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 export const ActivityProviderContext = createContext<ActivityProviderContent>({
@@ -30,7 +32,9 @@ export const ActivityProviderContext = createContext<ActivityProviderContent>({
   activityStreamData: [],
   categories: [],
   isPlaying: false,
-  routeCoordinates: []
+  routeCoordinates: [],
+  selectedCategories: [],
+  setSelectedCategories: () => { }
 })
 
 let timer: NodeJS.Timeout
@@ -51,6 +55,8 @@ export default function ActivityPage() {
 
   const [isStarting, setIsStarting] = useState<boolean>(false)
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
+
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
 
   const getActivityStream = async () => {
     return await fetchActivityStream(activityId, accessTokenRef.current)
@@ -157,7 +163,7 @@ export default function ActivityPage() {
     // start looping
     let counter = 1
     // set stream speed (in milliseconds)
-    const animationSpeed = 10
+    const animationSpeed = 1000
     timer = setInterval(() => {
       if (counter < activityStreamDataOriginal.length) {
         setActivityStreamData((prevData) => [...prevData, activityStreamDataOriginal[counter]])
@@ -194,7 +200,7 @@ export default function ActivityPage() {
     <div className="w-screen h-screen bg-background w-full h-full overflow-scroll p-4">
       <div className="w-full h-full text-foreground overflow-scroll">
 
-        <ActivityProviderContext.Provider value={{ activitySummary, activityStream, activityStreamData, categories, isPlaying, routeCoordinates }}>
+        <ActivityProviderContext.Provider value={{ activitySummary, activityStream, activityStreamData, categories, isPlaying, routeCoordinates, setSelectedCategories, selectedCategories }}>
           <div className="grid grid-cols-2 w-full h-full gap-4">
             <div className="flex h-full w-full">
               <MetricsOutline>
