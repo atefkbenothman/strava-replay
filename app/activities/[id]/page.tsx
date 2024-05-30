@@ -38,6 +38,7 @@ export const ActivityProviderContext = createContext<ActivityProviderContent>({
 })
 
 let timer: NodeJS.Timeout
+let animationFrameId: number
 
 export default function ActivityPage() {
   const activityId = useParams().id as string
@@ -160,24 +161,35 @@ export default function ActivityPage() {
     setIsStarting(true)
     // clear the existing streamData
     setActivityStreamData([activityStreamDataOriginal[0]])
-    // start looping
+    // set loop
     let counter = 1
-    // set stream speed (in milliseconds)
+    // set stream speed
     const animationSpeed = 1000
-    timer = setInterval(() => {
+
+    let lastTimestamp: number | null = null
+
+    const animate = (timestamp: number) => {
+      if (!lastTimestamp) {
+        lastTimestamp = timestamp
+      }
+      const elapsedTime = timestamp - lastTimestamp
       if (counter < activityStreamDataOriginal.length) {
         setActivityStreamData((prevData) => [...prevData, activityStreamDataOriginal[counter]])
         const nextCoord = [activityStreamDataOriginal[counter]["latlng"]?.[1], activityStreamDataOriginal[counter]["latlng"]?.[0]] as [number, number]
         setRouteCoordinates((prevCoords) => [...prevCoords, nextCoord])
         counter += 1
+        lastTimestamp = timestamp
       } else {
-        clearInterval(timer)
+        cancelAnimationFrame(animationFrameId!)
       }
-    }, animationSpeed)
+      animationFrameId = requestAnimationFrame(animate)
+    }
+
+    animationFrameId = requestAnimationFrame(animate)
 
     return () => {
-      if (timer) {
-        clearInterval(timer)
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId)
       }
     }
   }
@@ -191,8 +203,8 @@ export default function ActivityPage() {
 
   const pauseAnimation = () => {
     setIsPlaying(false)
-    if (timer) {
-      clearInterval(timer)
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId)
     }
   }
 
