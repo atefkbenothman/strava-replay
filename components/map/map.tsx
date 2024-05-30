@@ -115,7 +115,8 @@ export default function ActivityMap() {
 
       const map = new mapboxgl.Map({
         container: "map",
-        style: "mapbox://styles/mapbox/standard",
+        // style: "mapbox://styles/mapbox/standard",
+        style: "mapbox://styles/mapbox/dark-v11",
         center: [routeCoords[0][0], routeCoords[0][1]],
         zoom: 11
       })

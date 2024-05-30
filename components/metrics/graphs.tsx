@@ -39,7 +39,7 @@ export function LineGraph({ activityStreamData, category }: Props) {
             data={activityStreamData}
             syncId="sync"
           >
-            <Line type="monotone" dataKey="velocity_smooth" stroke="#0066FF" fill="#0066FF" isAnimationActive={false} dot={false} strokeWidth={3} />
+            <Line type="monotone" dataKey={category.id} stroke="#0066FF" fill="#0066FF" isAnimationActive={false} dot={false} strokeWidth={3} />
           </LineChart >
         </ResponsiveContainer >
       </div>
@@ -65,7 +65,7 @@ export function AreaGraph({ activityStreamData, category }: Props) {
             data={activityStreamData}
             syncId="sync"
           >
-            <Area type="monotone" dataKey="altitude" stroke="#fbff0a" strokeWidth={2} fill="#fdf712" isAnimationActive={false} />
+            <Area type="monotone" dataKey={category.id} stroke="#fbff0a" strokeWidth={2} fill="#fdf712" isAnimationActive={false} />
           </AreaChart >
         </ResponsiveContainer >
       </div>

@@ -197,24 +197,24 @@ export default function ActivityPage() {
   }
 
   return (
-    <div className="w-screen h-screen bg-background w-full h-full overflow-scroll p-4">
+    <div className="w-screen h-screen bg-background overflow-scroll p-4">
       <div className="w-full h-full text-foreground overflow-scroll">
 
         <ActivityProviderContext.Provider value={{ activitySummary, activityStream, activityStreamData, categories, isPlaying, routeCoordinates, setSelectedCategories, selectedCategories }}>
           <div className="grid grid-cols-2 w-full h-full gap-4">
-            <div className="flex h-full w-full">
+            <div className="h-full w-full">
               <MetricsOutline>
                 <MetricsControls />
                 <MetricsGraphs />
               </MetricsOutline>
             </div>
-            <div>
+            <div className="h-full w-full">
               <ActitivytMapOutline>
                 <ActivityMap />
                 {isPlaying ? (
                   <Button className="rounded" variant="secondary" onClick={pauseAnimation}>Pause</Button>
                 ) : (
-                  <Button className="rounded" variant="default" onClick={playAnimation}>Play</Button>
+                  <Button className="rounded" variant="secondary" onClick={playAnimation}>Play</Button>
                 )}
               </ActitivytMapOutline>
             </div>
