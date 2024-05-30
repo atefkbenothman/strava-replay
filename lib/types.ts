@@ -144,4 +144,5 @@ export type ChartDataType = {
   label: string
   units: string
   chart_type: string
+  stroke_color?: string
 }

@@ -117,19 +117,22 @@ export default function ActivityPage() {
       id: "altitude",
       label: "Altitude",
       units: "feet",
-      chart_type: "area"
+      chart_type: "area",
+      stroke_color: "#2acf83"
     },
     {
       id: "velocity_smooth",
       label: "Speed",
       units: "mph",
-      chart_type: "line"
+      chart_type: "line",
+      stroke_color: "#0e5fe8"
     },
     {
       id: "heartrate",
       label: "Heartrate",
       units: "bpm",
-      chart_type: "line"
+      chart_type: "line",
+      stroke_color: "#e61e1a"
     },
     {
       id: "cadence",
@@ -141,44 +144,36 @@ export default function ActivityPage() {
       id: "watts",
       label: "Watts",
       units: "watts",
-      chart_type: "line"
+      chart_type: "line",
+      stroke_color: "#7234f7"
     },
     {
       id: "temp",
       label: "Temp",
       units: "deg",
-      chart_type: "line"
+      chart_type: "line",
+      stroke_color: "orange"
     },
     {
       id: "grade_smooth",
       label: "Grade",
       units: "deg",
-      chart_type: "area"
+      chart_type: "area",
+      stroke_color: "yellow"
     },
   ]
 
   const startAnimation = () => {
     setIsStarting(true)
-    // clear the existing streamData
     setActivityStreamData([activityStreamDataOriginal[0]])
-    // set loop
     let counter = 1
-    // set stream speed
-    const animationSpeed = 1000
-
-    let lastTimestamp: number | null = null
 
     const animate = (timestamp: number) => {
-      if (!lastTimestamp) {
-        lastTimestamp = timestamp
-      }
-      const elapsedTime = timestamp - lastTimestamp
       if (counter < activityStreamDataOriginal.length) {
         setActivityStreamData((prevData) => [...prevData, activityStreamDataOriginal[counter]])
         const nextCoord = [activityStreamDataOriginal[counter]["latlng"]?.[1], activityStreamDataOriginal[counter]["latlng"]?.[0]] as [number, number]
         setRouteCoordinates((prevCoords) => [...prevCoords, nextCoord])
         counter += 1
-        lastTimestamp = timestamp
       } else {
         cancelAnimationFrame(animationFrameId!)
       }
