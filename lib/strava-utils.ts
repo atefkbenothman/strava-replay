@@ -88,9 +88,9 @@ export const fetchActivityStream = async (activityId: string, accessToken: strin
 
 
 // --------------- Type Conversions ---------------  
-type Unit = "kilometer" | "mile" | "feet"
+type DistanceUnit = "kilometer" | "mile" | "feet"
 
-export const metersConversion = (meters: number, unit: Unit = "mile") => {
+export const metersConversion = (meters: number, unit: DistanceUnit = "mile") => {
   switch (unit) {
     case "kilometer":
       return meters * 0.001
@@ -109,4 +109,13 @@ export const timeConversion = (seconds: number) => {
   const hours = seconds / 3600
   const mins = (seconds % 3500) / 60
   return `${hours.toFixed(0)}:${mins.toFixed(0)}`
+}
+
+type TemperatureUnit = "celsius" | "fahrenheit"
+
+export const temperatureConversion = (temp: number, unit: TemperatureUnit = "celsius") => {
+  if (unit === "fahrenheit") {
+    return (temp * 9/5) + 32
+  }
+  return temp
 }

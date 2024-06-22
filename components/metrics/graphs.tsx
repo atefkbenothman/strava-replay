@@ -1,4 +1,5 @@
 import { StreamFormattedType, ChartDataType } from '@/lib/types'
+import { speedConversion, metersConversion, temperatureConversion } from "@/lib/strava-utils"
 
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Brush, LineChart, Line } from 'recharts'
 
@@ -14,7 +15,15 @@ export function NumberGraph({ activityStreamData, category }: Props) {
         <p>{category.label}</p>
       </div>
       <div className="flex gap-2 w-full h-full items-center justify-center my-4">
-        <p className="text-white font-medium text-6xl">{Math.round(activityStreamData.at(-1)?.[category.id as keyof StreamFormattedType] as number || 0)}</p>
+        {category.units === "mi" ? (
+          <div>
+            <p className="text-white font-medium text-6xl">{metersConversion(activityStreamData.at(-1)?.[category.id as keyof StreamFormattedType] as number || 0).toFixed(2)}</p>
+          </div>
+        ) : (
+          <div>
+            <p className="text-white font-medium text-6xl">{Math.round(activityStreamData.at(-1)?.[category.id as keyof StreamFormattedType] as number || 0)}</p>
+          </div>
+        )}
         <p className="text-muted-foreground">{category.units}</p>
       </div>
     </div >
@@ -30,7 +39,19 @@ export function LineGraph({ activityStreamData, category }: Props) {
       <div className="flex w-full h-full">
         <div className="absolute top-0 right-0 m-2 flex items-center justify-center text-white font-medium text-xl">
           <div className="flex flex-col gap-1 z-50 p-1 rounded">
-            <p className="text-6xl">{Math.round(activityStreamData.at(-1)?.[category.id as keyof StreamFormattedType] as number || 0)}</p>
+            {category.units === "mph" ? (
+              <div>
+                <p className="text-6xl">{Math.round(speedConversion(activityStreamData.at(-1)?.[category.id as keyof StreamFormattedType] as number || 0))}</p>
+              </div>
+            ) : category.units === "deg" ? (
+              <div>
+                <p className="text-6xl">{Math.round(temperatureConversion(activityStreamData.at(-1)?.[category.id as keyof StreamFormattedType] as number || 0, "fahrenheit"))}</p>
+              </div>
+            ) : (
+              <div>
+                <p className="text-6xl">{Math.round(activityStreamData.at(-1)?.[category.id as keyof StreamFormattedType] as number || 0)}</p>
+              </div>
+            )}
             <p className="text-right text-muted-foreground">{category.units}</p>
           </div>
         </div>
@@ -56,7 +77,15 @@ export function AreaGraph({ activityStreamData, category }: Props) {
       <div className="flex w-full h-full">
         <div className="absolute top-0 right-0 m-2 flex items-center justify-center text-white font-medium text-xl">
           <div className="flex flex-col gap-1 z-50 p-1 rounded">
-            <p className="text-6xl">{Math.round(activityStreamData.at(-1)?.[category.id as keyof StreamFormattedType] as number || 0)}</p>
+            {category.units === "feet" ? (
+              <div>
+                <p className="text-6xl">{Math.round(metersConversion(activityStreamData.at(-1)?.[category.id as keyof StreamFormattedType] as number || 0, "feet"))}</p>
+              </div>
+            ) : (
+              <div>
+                <p className="text-6xl">{Math.round(activityStreamData.at(-1)?.[category.id as keyof StreamFormattedType] as number || 0)}</p>
+              </div>
+            )}
             <p className="text-right text-muted-foreground">{category.units}</p>
           </div>
         </div>
